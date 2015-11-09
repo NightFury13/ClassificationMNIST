@@ -8,9 +8,9 @@ import sys
 import random
 import argparse
 import numpy as np
-import Image
 from sklearn import cross_validation, metrics
 from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
 
 #-------------------- Handle Input --------------------------#
 parser = argparse.ArgumentParser()
@@ -22,9 +22,10 @@ parser.add_argument('-conf_mat',dest='conf_mat',type=bool,help='Display confusio
 parser.add_argument('-C',dest='C',type=float,help='Value of classifier constant C')
 parser.add_argument('-gamma',dest='gamma',type=float,help='Value of gamma for classifier training.')
 parser.add_argument('-neigh',dest='neigh',type=int,help='#Neighbours to consider for NN model.')
+parser.add_argument('-out_file',dest='out_file',help='Output filename to store all outputs as strings.')
 args = parser.parse_args()
 
-if args.data_path == None or args.clf_type == None or args.kernel_type == None:
+if args.data_path == None or args.clf_type == None:
     err_str =  "[ERROR] Incorrect usage! Run script as follows :\n"
     err_str += "$> python classifier.py -data_path /Users/Home/research/datasets/MNIST -clf_type [SVM,NN] -kernel_type [linear, rbf, sigmoid, Chi-square, poly] -report True/False -conf_mat True/False -C 2.8 -gamma 0.0073 -neigh 5\n"
     print err_str
@@ -38,6 +39,8 @@ C = 2.8 if not args.C else float(args.C)
 gamma = 0.0073 if not args.gamma else float(args.gamma)
 neigh = 5 if not args.neigh else int(args.neigh)
 data_path = '/Users/Home/research/datasets/MNIST' if not args.data_path else str(args.data_path)
+print data_path
+out_file = 'output.txt' if not args.out_file else args.out_file
 #-----------------------------------------------------------------#
 
 #------------------ Global Variables Init ------------------------#
@@ -45,10 +48,10 @@ valid_clf = ['SVM', 'NN']
 valid_kernel = ['linear','rbf','Chi-square','poly','sigmoid']
 
 if clf_type not in valid_clf:
-	print "[ERROR] Invalid classifier type. Choose from %s\n" % str(valid_clf)
+	print "[ERROR] Invalid classifier type %s. Choose from %s\n" % (clf_type,str(valid_clf))
 	raise "Invalid Classifier Type"
-if kernel_type not in valid_kernel:
-	print "[ERROR] Invalid kernel type. Choose from %s" % str(valid_clf)
+if kernel_type not in valid_kernel and kernel_type:
+	print "[ERROR] Invalid kernel type %s. Choose from %s" % (kernel_type,str(valid_clf))
 	raise "Invalid Kernel Type"
 
 train_file = os.path.join(data_path,'train/new_train.txt')
@@ -60,10 +63,14 @@ train_labels = []
 test_images = []
 test_labels = []
 labels = []
+
+total_out = ''
 #-----------------------------------------------------------------#
 
 #--------------- Training Dataset Loading ------------------------#
-print "[INFO] Loading training images and labels"
+out =  "[INFO] Loading training images and labels"
+print out
+total_out+=out+'\n'
 
 try:
     data = np.load(os.path.join(data_path,'train','training_data.npz'))
@@ -72,10 +79,15 @@ try:
     with open(label_file) as f:
     	for line in f.readlines():
     		labels.append(int(line.strip()))
-    print "[SUCCESS] Training data successfully loaded from numpy."
-    print "     #Train-Images : %d %s; #Train-Labels : %d; #Labels : %d" % (len(train_images), str(train_images[0].shape), len(train_labels), len(labels))
+    out = "[SUCCESS] Training data successfully loaded from numpy.\n"
+    out += "     #Train-Images : %d %s; #Train-Labels : %d; #Labels : %d" % (len(train_images), str(train_images[0].shape), len(train_labels), len(labels))
+    print out
+    total_out+=out+'\n'
 except:
-    print "[FAIL] Loading training_data from numpy array failed. Manually loading data."
+    import Image
+    out =  "[FAIL] Loading training_data from numpy array failed. Manually loading data."
+    print out
+    total_out+=out+'\n'
     idx = 0.0
     len_tot = 60000
     with open(train_file,'r') as train_data:
@@ -89,26 +101,37 @@ except:
             train_labels.append(label)
             sys.stdout.flush()
     print ""
-    print "[INFO] Iterative loading of training data complete. Saving data as numpy array."
+    out =  "[INFO] Iterative loading of training data complete. Saving data as numpy array."
+    print out
+    total_out += out+'\n'
 
     np_train_images = np.array(train_images)
     np_train_labels = np.array(train_labels)
     np.savez(os.path.join(data_path,'train','training_data.npz'), train_images=np_train_images, train_labels=np_train_labels)
-    print "[SUCCESS] Training data successfull stored as numpy."
-    print "#Train-Images : %d %s; #Train-Labels : %d; #Labels : %d" % (len(train_images), str(train_images[0].shape), len(train_labels), len(labels))
+    out =  "[SUCCESS] Training data successfull stored as numpy.\n"
+    out +=  "#Train-Images : %d %s; #Train-Labels : %d; #Labels : %d" % (len(train_images), str(train_images[0].shape), len(train_labels), len(labels))
+    print out
+    total_out += out+'\n'
 #--------------------------------------------------------------------#
 
 #----------------- Testing Data Loading -----------------------------#
-print "[INFO] Loading Testing images and labels"
+out =  "[INFO] Loading Testing images and labels"
+print out
+total_out += out+'\n'
 
 try:
     data = np.load(os.path.join(data_path,'test','testing_data.npz'))
     test_images = list(data['test_images'].reshape(data['test_images'].shape[0], -1))
     test_labels = list(data['test_labels'])
-    print "[SUCCESS] Training data successfully loaded from numpy."
-    print "     #Test-Images : %d %s; #Test-Labels : %d" % (len(test_images), str(test_images[0].shape), len(test_labels))
+    out =  "[SUCCESS] Training data successfully loaded from numpy.\n"
+    out += "     #Test-Images : %d %s; #Test-Labels : %d" % (len(test_images), str(test_images[0].shape), len(test_labels))
+    print out
+    total_out += out+'\n'
 except:
-    print "[FAIL] Loading testing_data from numpy array failed. Manually loading data."
+    import Image
+    out = "[FAIL] Loading testing_data from numpy array failed. Manually loading data."
+    print out
+    total_out += out+'\n'
     idx = 0.0
     len_tot = 60000
     with open(test_file,'r') as test_data:
@@ -122,17 +145,23 @@ except:
             test_labels.append(label)
             sys.stdout.flush()
     print ""
-    print "[INFO] Iterative loading of test data complete. Saving data as numpy array."
+    out =  "[INFO] Iterative loading of test data complete. Saving data as numpy array."
+    print out
+    total_out += out+'\n'
 
     np_test_images = np.array(test_images)
     np_test_labels = np.array(test_labels)
     np.savez(os.path.join(data_path,'test','testing_data.npz'), test_images=np_test_images, test_labels=np_test_labels)
-    print "[SUCCESS] Testing data successfull stored as numpy."
-    print "#Test-Images : %d %s; #Test-Labels : %d" % (len(test_images), str(test_images[0].shape), len(test_labels))
+    out =  "[SUCCESS] Testing data successfull stored as numpy.\n"
+    out += "#Test-Images : %d %s; #Test-Labels : %d" % (len(test_images), str(test_images[0].shape), len(test_labels))
+    print out
+    total_out += out+'\n'
 #--------------------------------------------------------------------#
 
 #---------------------- Perform Classification ----------------------#
-print "[INFO] Training the model on loaded data."
+out =  "[INFO] Training the model on loaded data."
+print out
+total_out += out+'\n'
 if clf_type=='SVM':
 	clf = SVC(kernel=kernel_type, C=C, gamma=gamma)
 elif clf_type=='NN':
@@ -140,14 +169,25 @@ elif clf_type=='NN':
 
 clf.fit(train_images, train_labels)	
 
-print "[SUCCESS] Training Complete"
+out =  "[SUCCESS] Training Complete"
+print out
+total_out += out+'\n'
 expected = test_labels
 predicted = clf.predict(test_images)
 #--------------------------------------------------------------------#
 
 #--------------------- View Outputs ---------------------------------#
 if show_report:
-	print "Classification report for classifier %s:\n%s\n" % (clf, metrics.classification_report(expected, predicted))
+    out =  "Classification report for classifier %s:\n%s\n" % (clf, metrics.classification_report(expected, predicted))
+    print out
+    total_out += out+'\n'
 if show_mat:	
-	print "Confusion matrix:\n", metrics.confusion_matrix(expected, predicted)
+    out = "Confusion matrix:\n", metrics.confusion_matrix(expected, predicted)
+    print out
+    total_out += out+'\n'
+#--------------------------------------------------------------------#
+
+#--------------------- Save Outputs ---------------------------------#
+with open(out_file,'w') as file:
+    file.write(total_out)    
 #--------------------------------------------------------------------#

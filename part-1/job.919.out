@@ -1,0 +1,38 @@
+/Pulsar2/mohit.jain/datasets/MNIST
+[INFO] Loading training images and labels
+[SUCCESS] Training data successfully loaded from numpy.
+     #Train-Images : 60000 (784,); #Train-Labels : 60000; #Labels : 10
+[INFO] Loading Testing images and labels
+[SUCCESS] Training data successfully loaded from numpy.
+     #Test-Images : 10000 (784,); #Test-Labels : 10000
+[INFO] Training the model on loaded data.
+[SUCCESS] Training Complete
+Classification report for classifier SVC(C=2.8, cache_size=200, class_weight=None, coef0=0.0, degree=3,
+  gamma=0.0073, kernel='rbf', max_iter=-1, probability=False,
+  random_state=None, shrinking=True, tol=0.001, verbose=False):
+             precision    recall  f1-score   support
+
+          0       0.00      0.00      0.00       980
+          1       0.11      1.00      0.20      1135
+          2       0.00      0.00      0.00      1032
+          3       0.00      0.00      0.00      1010
+          4       0.00      0.00      0.00       982
+          5       0.00      0.00      0.00       892
+          6       0.00      0.00      0.00       958
+          7       0.00      0.00      0.00      1028
+          8       0.00      0.00      0.00       974
+          9       0.00      0.00      0.00      1009
+
+avg / total       0.01      0.11      0.02     10000
+
+
+('Confusion matrix:\n', array([[   0,  980,    0,    0,    0,    0,    0,    0,    0,    0],
+       [   0, 1135,    0,    0,    0,    0,    0,    0,    0,    0],
+       [   0, 1032,    0,    0,    0,    0,    0,    0,    0,    0],
+       [   0, 1010,    0,    0,    0,    0,    0,    0,    0,    0],
+       [   0,  982,    0,    0,    0,    0,    0,    0,    0,    0],
+       [   0,  892,    0,    0,    0,    0,    0,    0,    0,    0],
+       [   0,  958,    0,    0,    0,    0,    0,    0,    0,    0],
+       [   0, 1028,    0,    0,    0,    0,    0,    0,    0,    0],
+       [   0,  974,    0,    0,    0,    0,    0,    0,    0,    0],
+       [   0, 1009,    0,    0,    0,    0,    0,    0,    0,    0]]))

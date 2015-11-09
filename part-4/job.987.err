@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "modified_training.py", line 118, in <module>
+    predicted = clf.predict(test_images)
+  File "/usr/local/lib/python2.7/dist-packages/sklearn/svm/base.py", line 500, in predict
+    y = super(BaseSVC, self).predict(X)
+  File "/usr/local/lib/python2.7/dist-packages/sklearn/svm/base.py", line 290, in predict
+    X = self._validate_for_predict(X)
+  File "/usr/local/lib/python2.7/dist-packages/sklearn/svm/base.py", line 423, in _validate_for_predict
+    X = check_array(X, accept_sparse='csr', dtype=np.float64, order="C")
+  File "/usr/local/lib/python2.7/dist-packages/sklearn/utils/validation.py", line 367, in check_array
+    % (n_features, shape_repr, ensure_min_features))
+ValueError: Found array with 0 feature(s) (shape=(1, 0)) while a minimum of 1 is required.

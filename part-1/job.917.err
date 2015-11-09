@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "classifier.py", line 187, in <module>
+    total_out += out+'\n'
+TypeError: can only concatenate tuple (not "str") to tuple

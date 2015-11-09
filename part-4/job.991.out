@@ -1,0 +1,29 @@
+Parameters : percent - 10.0, C - 2.8, gamma - 0.0073, delta - 10.0
+[INFO] Loading training images and labels
+[INFO] Shuffling the data.
+[SUCCESS] Training data successfully loaded from numpy.
+     #Train-Images : 6000 (784,); #Train-Labels : 6000
+     #Test-Images : 54000 (784,); #Test-Labels : 54000
+[INFO] Training the model on loaded data 10.0% of training data.
+[ Iteration 1 ] :: #Train-Images : 6000; #Test-Images : 54000
+    [INFO] Training classifier on training images.
+    [INFO] 47932%(88.762962963%) images classified incorrectly.
+Confusion matrix:
+[[   0 5330    0    0    0    0    0    0    0    0]
+ [   0 6068    0    0    0    0    0    0    0    0]
+ [   0 5349    0    0    0    0    0    0    0    0]
+ [   0 5522    0    0    0    0    0    0    0    0]
+ [   0 5256    0    0    0    0    0    0    0    0]
+ [   0 4869    0    0    0    0    0    0    0    0]
+ [   0 5342    0    0    0    0    0    0    0    0]
+ [   0 5634    0    0    0    0    0    0    0    0]
+ [   0 5281    0    0    0    0    0    0    0    0]
+ [   0 5349    0    0    0    0    0    0    0    0]]
+[ Iteration 2 ] :: #Train-Images : 53932; #Test-Images : 6068
+    [INFO] Training classifier on training images.
+    [INFO] 6068%(100.0%) images classified incorrectly.
+Confusion matrix:
+[[   0 6068]
+ [   0    0]]
+[ Iteration 3 ] :: #Train-Images : 60000; #Test-Images : 0
+    [INFO] Training classifier on training images.

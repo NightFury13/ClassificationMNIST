@@ -8,9 +8,9 @@ import sys
 import random
 import argparse
 import numpy as np
-import Image
 from sklearn import cross_validation, metrics
 from sklearn.svm import SVC
+from random import shuffle
 
 #-------------------- Handle Input --------------------------#
 parser = argparse.ArgumentParser()
@@ -32,6 +32,8 @@ C = 2.8 if not args.C else float(args.C)
 gamma = 0.0073 if not args.gamma else float(args.gamma)
 delta = 0.01 if not args.delta else float(args.delta)
 data_path = '/Users/Home/research/datasets/MNIST' if not args.data_path else str(args.data_path)
+
+print "Parameters : percent - %s, C - %s, gamma - %s, delta - %s" % (str(percent), str(C), str(gamma), str(delta))
 #-----------------------------------------------------------------#
 
 #------------------ Global Variables Init ------------------------#
@@ -51,16 +53,22 @@ try:
     data = np.load(os.path.join(data_path,'train','training_data.npz'))
     loaded_images = list(data['train_images'].reshape(data['train_images'].shape[0], -1))
     loaded_labels = list(data['train_labels'])
+    total_data = []
+    for i in range(len(loaded_images)):
+        total_data.append([loaded_images[i],loaded_labels[i]])
+    print "[INFO] Shuffling the data."
+    shuffle(total_data)
     
     train_idx = int(len(loaded_images)*(percent/100))
-    train_images = loaded_images[:train_idx]
-    train_labels = loaded_labels[:train_idx]
-    test_images = loaded_images[train_idx+1:]
-    test_labels = loaded_labels[train_idx+1:]
+    train_images = [x[0] for x in total_data[:train_idx]]
+    train_labels = [x[1] for x in total_data[:train_idx]]
+    test_images = [x[0] for x in total_data[train_idx:]]
+    test_labels = [x[1] for x in total_data[train_idx:]]
     print "[SUCCESS] Training data successfully loaded from numpy."
     print "     #Train-Images : %d %s; #Train-Labels : %d" % (len(train_images), str(train_images[0].shape), len(train_labels))
     print "     #Test-Images : %d %s; #Test-Labels : %d" % (len(test_images), str(test_images[0].shape), len(test_labels))
 except:
+    import Image
     print "[FAIL] Loading training_data from numpy array failed. Manually loading data."
 
     idx = 0.0
@@ -96,10 +104,11 @@ except:
 print "[INFO] Training the model on loaded data %s%s of training data." % (str(percent),'%')
 
 iteration = 0
-percent_incorrect = 1 # Init value
+percent_incorrect = 100.0 # Init value
 clf = SVC(C=C, gamma=gamma)
+incorrect_indices = []
 
-while percent_incorrect > delta:
+while percent_incorrect > delta and iteration < 20:
     iteration += 1
     print "[ Iteration %s ] :: #Train-Images : %s; #Test-Images : %s" % (iteration, str(len(train_images)), str(len(test_images)))
     print "    [INFO] Training classifier on training images."
@@ -111,18 +120,21 @@ while percent_incorrect > delta:
     for i in range(len(test_images)):
         if expected[i]!=predicted[i]:
             incorrect_indices.append(i)
-    percent_incorrect = float(len(incorrect_indices))/len(test_images)
+    percent_incorrect = float(len(incorrect_indices)*100)/len(test_images)
     print "    [INFO] %s%s(%s%s) images classified incorrectly." % (str(len(incorrect_indices)), '%', percent_incorrect, '%')
+    print "Confusion matrix:\n", metrics.confusion_matrix(expected, predicted)
 
-    for i in range(len(incorrected_indices)):
-        train_images.append(test_images[i])
-        train_labels.append(test_labels[i])
-        test_images.pop(i)
-        test_labels.pop(i)
+    for i in range(len(incorrect_indices)):
+        train_images.append(test_images[incorrect_indices[i]])
+        train_labels.append(test_labels[incorrect_indices[i]])
+    for j in range(len(incorrect_indices)):
+        i = len(incorrect_indices)-j-1
+        test_images.pop(incorrect_indices[i])
+        test_labels.pop(incorrect_indices[i])
 #--------------------------------------------------------------------#
 
 #--------------------- View Outputs ---------------------------------#
 print ""
-print "[COMPLETE] Training Process Complete."
+print "[COMPLETE] Training Process Complete at iteration-%s" % str(iteration)
 print "[ Final ] %s%s(%s%s) images classified incorrectly." % (str(len(incorrect_indices)), '%', percent_incorrect, '%')
 #--------------------------------------------------------------------#

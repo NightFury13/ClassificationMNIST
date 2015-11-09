@@ -1,0 +1,38 @@
+/Pulsar2/mohit.jain/datasets/MNIST
+[INFO] Loading training images and labels
+[SUCCESS] Training data successfully loaded from numpy.
+     #Train-Images : 60000 (784,); #Train-Labels : 60000; #Labels : 10
+[INFO] Loading Testing images and labels
+[SUCCESS] Training data successfully loaded from numpy.
+     #Test-Images : 10000 (784,); #Test-Labels : 10000
+[INFO] Training the model on loaded data.
+[SUCCESS] Training Complete
+Classification report for classifier SVC(C=2.8, cache_size=200, class_weight=None, coef0=0.0, degree=3,
+  gamma=0.0073, kernel='poly', max_iter=-1, probability=False,
+  random_state=None, shrinking=True, tol=0.001, verbose=False):
+             precision    recall  f1-score   support
+
+          0       0.97      0.99      0.98       980
+          1       0.98      0.99      0.99      1135
+          2       0.97      0.98      0.97      1032
+          3       0.97      0.98      0.97      1010
+          4       0.98      0.98      0.98       982
+          5       0.97      0.97      0.97       892
+          6       0.99      0.97      0.98       958
+          7       0.98      0.97      0.97      1028
+          8       0.97      0.97      0.97       974
+          9       0.97      0.96      0.96      1009
+
+avg / total       0.98      0.98      0.98     10000
+
+
+('Confusion matrix:\n', array([[ 971,    0,    2,    1,    0,    2,    2,    0,    2,    0],
+       [   1, 1128,    3,    0,    0,    1,    1,    1,    0,    0],
+       [   5,    2, 1007,    1,    1,    0,    2,    5,    8,    1],
+       [   0,    0,    3,  987,    0,    7,    0,    3,    6,    4],
+       [   1,    0,    6,    0,  962,    0,    1,    1,    0,   11],
+       [   4,    1,    0,   13,    1,  865,    3,    0,    3,    2],
+       [   6,    2,    3,    0,    3,    7,  934,    0,    3,    0],
+       [   1,    8,   10,    5,    3,    0,    0,  993,    0,    8],
+       [   5,    1,    6,    4,    2,    3,    2,    5,  941,    5],
+       [   2,    4,    2,    9,   10,    4,    0,    6,    3,  969]]))

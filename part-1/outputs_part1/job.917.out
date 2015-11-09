@@ -1,0 +1,37 @@
+/Pulsar2/mohit.jain/datasets/MNIST
+[INFO] Loading training images and labels
+[SUCCESS] Training data successfully loaded from numpy.
+     #Train-Images : 60000 (784,); #Train-Labels : 60000; #Labels : 10
+[INFO] Loading Testing images and labels
+[SUCCESS] Training data successfully loaded from numpy.
+     #Test-Images : 10000 (784,); #Test-Labels : 10000
+[INFO] Training the model on loaded data.
+[SUCCESS] Training Complete
+Classification report for classifier KNeighborsClassifier(algorithm='auto', leaf_size=30, metric='minkowski',
+           metric_params=None, n_neighbors=7, p=2, weights='distance'):
+             precision    recall  f1-score   support
+
+          0       0.97      0.99      0.98       980
+          1       0.96      1.00      0.98      1135
+          2       0.99      0.96      0.97      1032
+          3       0.97      0.96      0.97      1010
+          4       0.98      0.96      0.97       982
+          5       0.97      0.97      0.97       892
+          6       0.98      0.99      0.98       958
+          7       0.96      0.96      0.96      1028
+          8       0.99      0.95      0.96       974
+          9       0.95      0.96      0.96      1009
+
+avg / total       0.97      0.97      0.97     10000
+
+
+('Confusion matrix:\n', array([[ 974,    1,    1,    0,    0,    1,    2,    1,    0,    0],
+       [   0, 1133,    2,    0,    0,    0,    0,    0,    0,    0],
+       [  11,    7,  988,    2,    1,    0,    2,   17,    4,    0],
+       [   0,    3,    2,  973,    1,   13,    1,    8,    5,    4],
+       [   1,    6,    0,    0,  945,    0,    5,    2,    1,   22],
+       [   5,    0,    0,    6,    2,  867,    5,    1,    2,    4],
+       [   6,    3,    0,    0,    3,    2,  944,    0,    0,    0],
+       [   0,   24,    3,    0,    1,    0,    0,  990,    0,   10],
+       [   6,    3,    4,   12,    6,    8,    3,    5,  921,    6],
+       [   5,    6,    3,    5,    8,    4,    1,   10,    2,  965]]))
